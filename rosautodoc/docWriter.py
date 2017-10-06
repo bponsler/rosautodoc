@@ -3,6 +3,10 @@ from os.path import join
 from formatConverters import FileExtension, MarkdownToHtml, MARKDOWN, HTML
 
 
+# String to tag things as needing work
+TODO_DESC = "TODO: description"
+
+
 class NodeInfo:
     """The NodeInfo class contains all the information pertaining to
     a single ROS Node. This keeps track of the published topics,
@@ -89,32 +93,42 @@ class NodeInfo:
         lines.extend([
             "## Parameters:",
             ])
-        for param in self.__params:
-            lines.append("- %s -- " % param)
+        for name in sorted(self.__params):
+            name = self.__removeNamespace(name)
+            lines.append("- %s [TODO: type] -- %s" % (name, TODO_DESC))
 
         # Document services
         lines.extend([
             "",
             "## Services:",
         ])
-        for name, serviceType in self.__services.iteritems():
-            lines.append("- %s [%s] -- " % (name, serviceType))
+        sortedServices = sorted(self.__services.keys())
+        for name in sortedServices:
+            serviceType = self.__services[name]
+            name = self.__removeNamespace(name)
+            lines.append("- %s [%s] -- %s" % (name, serviceType, TODO_DESC))
 
         # Document subscriptions
         lines.extend([
             "",
             "## Subscribers:",
         ])
-        for name, subType in self.__subs.iteritems():
-            lines.append("- %s [%s] -- " % (name, subType))
+        sortedSubs = sorted(self.__subs.keys())
+        for name in sortedSubs:
+            subType = self.__subs[name]
+            name = self.__removeNamespace(name)
+            lines.append("- %s [%s] -- %s" % (name, subType, TODO_DESC))
 
         # Document publications
         lines.extend([
             "",
             "## Publishers:",
         ])
-        for name, pubType in self.__pubs.iteritems():
-            lines.append("- %s [%s] -- " % (name, pubType))
+        sortedPubs = sorted(self.__pubs)
+        for name in sortedPubs:
+            pubType = self.__pubs[name]
+            name = self.__removeNamespace(name)
+            lines.append("- %s [%s] -- %s" % (name, pubType, TODO_DESC))
 
         cleanNodeName = self.getCleanName()
         extension = FileExtension.get(docFormat)
@@ -128,6 +142,17 @@ class NodeInfo:
         fd = open(filename, "w")
         fd.write("%s\n" % "\n".join(lines))
         fd.close()
+
+    def __removeNamespace(self, namespace):
+        """Update the given namespace to remove the private namespace
+        for this node, if it exists.
+
+        * namespace -- the namespace item (topic, parameter, etc)
+
+        """
+        if namespace.startswith(self.__nodeName):
+            namespace = namespace.replace(self.__nodeName, "~", 1)
+        return namespace
 
 
 class RosDocWriter:

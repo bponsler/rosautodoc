@@ -169,7 +169,7 @@ class RosMasterFunctions:
         """
         if service not in self.FilterServices:
             # The type of the service is not included in the XMLRPC call
-            self.__docWriter.addService(callerId, service, "UNKNOWN")
+            self.__docWriter.addService(callerId, service, "TODO: type")
 
     def _getParam(self, callerId, key):
         """Intercept callback for the getParam function.
