@@ -31,12 +31,12 @@ node and then use this information to create documentation for the node.
 
 This section describes how to use this project to automatically generate documentation.
 
-    $ rosautodoc --help --doc-format=html --output-dir=/tmp/test_doc
+    $ rosautodoc --help
     usage: rosautodoc [-h] [--output-dir OUTPUT_DIR] [--proxy-port PROXY_PORT]
                       [--doc-format DOC_FORMAT]
                       [node [node ...]]
 
-    Automatically document the API for a a ROS node.
+    Automatically document the API for a ROS node.
 
     positional arguments:
       node                  The name of the nodes to document. If empty, all nodes
@@ -61,7 +61,7 @@ First, run the ROS master in one terminal (using the default master URI http://l
 Next, run the auto doc script in another terminal:
 
     mkdir /tmp/my_documentation
-    rosautodoc --port=33133 --output=/tmp/my_documentation
+    rosautodoc --proxy-port=33133 --output=/tmp/my_documentation
 
 Finally, run your node in another terminal, and be sure to connect it to the same port that the rosautodoc script is using:
 
@@ -74,18 +74,18 @@ located in the /tmp/my_documentation directory.
 
 Alternatively, you can document only a specific node:
 
-    rosautodoc --port=33133 --output=/tmp/my_documentation /ns/my_node_name
+    rosautodoc --proxy-port=33133 --output=/tmp/my_documentation /ns/my_node_name
 
 The following command can be used to generate HTML documentation:
 
-    rosautodoc --port=33133 --doc-format=html --output=/tmp/my_documentation
+    rosautodoc --proxy-port=33133 --doc-format=html --output=/tmp/my_documentation
 
 This will generate an HTML documentation page for every node in your system and
 also a main index.html page that links to all the node documentation pages.
 
 You can also generate documentation for only a specific set of nodes.
 
-    rosautodoc --port=33133 node1 node2 node3
+    rosautodoc --proxy-port=33133 node1 node2 node3
 
 This command will generated a markdown (the default documentation format) file
 for the three nodes provides: node1, node2, and node3. It will also generate
@@ -99,4 +99,5 @@ will be generated in the current working directory by defualt.
 For example documentation view one of the following pages:
 
 - [Example Markdown documentation](examples/markdown_example/README.md)
-- [Example HTML documentation](examples/html_example/index.html)
+- [Example HTML documentation (raw)](examples/html_example/index.html)
+- [Example HTML documentation (rendered)](https://rawgit.com/bponsler/rosautodoc/master/examples/html_example/index.html)
