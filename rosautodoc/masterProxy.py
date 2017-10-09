@@ -258,7 +258,7 @@ class RosMasterProxy:
 def main():
     """The main function for the rosautodoc application."""
     parser = argparse.ArgumentParser(
-        description='Automatically document the API for a a ROS node.')
+        description='Automatically document the API for a ROS node.')
     parser.add_argument(
         'nodes',
         metavar="node",
