@@ -2,11 +2,11 @@ import socket
 import argparse
 from os.path import exists, abspath, curdir
 
-import xmlrpclib
-from SimpleXMLRPCServer import SimpleXMLRPCServer
+import xmlrpc
+from xmlrpc.server import SimpleXMLRPCServer
 
-from docWriter import RosDocWriter
-from formatConverters import MARKDOWN, SUPPORTED_DOC_FORMATS
+from .docWriter import RosDocWriter
+from .formatConverters import MARKDOWN, SUPPORTED_DOC_FORMATS
 
 import rosgraph
 
@@ -76,7 +76,7 @@ class RosMasterFunctions:
         masterUri = 'http://%s:%s' % (self.RosMasterHost, self.RosMasterPort)
 
         # Create an XMLRPC client to connect to the ROS master
-        self.__client = xmlrpclib.ServerProxy(masterUri)
+        self.__client = xmlrpc.client.ServerProxy(masterUri)
 
         # Register all ROS master methods with this class to allow custom
         # functionality to be executed prior to sending the data to the
@@ -124,7 +124,7 @@ class RosMasterFunctions:
                 if hasattr(self, callback):
                     callbackFn = getattr(self, callback)
                     callbackFn(*args)
-            except Exception, e:
+            except Exception as e:
                 import traceback
                 traceback.print_exc()
 
@@ -292,30 +292,30 @@ def main():
 
     # Make sure the format is valid
     if docFormat not in SUPPORTED_DOC_FORMATS:
-        print "ERROR: unknown doc-format argument: %s" % docFormat
+        print ("ERROR: unknown doc-format argument: %s" % docFormat)
         exit(2)
 
     # Ensure that the output directory exists
     if not exists(outputDir):
-        print "ERROR: the output directory does not exist: %s" % outputDir
+        print ("ERROR: the output directory does not exist: %s" % outputDir)
         exit(3)
 
     # Make sure the ROS master is running
     try:
         rosgraph.Master('/rostopic').getPid()
     except socket.error:
-        print "ERROR: failed to communicate with the ROS master!"
+        print ("ERROR: failed to communicate with the ROS master!")
         exit(4)
 
     # Create the ROS master proxy node
     masterProxy = RosMasterProxy(nodeNames, port=proxyPort)
 
     try:
-        print "Starting server..."
+        print ("Starting server...")
         masterProxy.start()
     except (KeyboardInterrupt, SystemExit):
         pass
 
     # Document the information about the node
-    print "Documenting..."
+    print ("Documenting...")
     masterProxy.document(outputDir, docFormat=docFormat)

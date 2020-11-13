@@ -1,6 +1,6 @@
 from os.path import join
 
-from formatConverters import FileExtension, MarkdownToHtml, MARKDOWN, HTML
+from .formatConverters import FileExtension, MarkdownToHtml, MARKDOWN, HTML
 
 
 # String to tag things as needing work
@@ -225,14 +225,14 @@ class RosDocWriter:
         * docFormat -- the desired format of the documentation
 
         """
-        for nodeName, node in self.__nodes.iteritems():
-            print "    Documenting %s..." % nodeName
+        for nodeName, node in self.__nodes.items():
+            print ("    Documenting %s..." % nodeName)
             node.document(outputDir, docFormat)
 
         # Write a manifest file to link to all other nodes, if there are
         # multiple nodes being documented
         if len(self.__nodes) > 0:
-            print "Creating documentation manifest..."
+            print ("Creating documentation manifest...")
             self.__writeManifest(outputDir, docFormat)
 
     def __writeManifest(self, outputDir, docFormat=MARKDOWN):
