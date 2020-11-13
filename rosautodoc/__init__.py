@@ -1,3 +1,3 @@
-from formatConverters import *
-from docWriter import *
-from masterProxy import *
+from .formatConverters import *
+from .docWriter import *
+from .masterProxy import *
